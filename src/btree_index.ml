@@ -30,7 +30,7 @@ module Make (Key : Key) (Value : Value) = struct
     let decode s = decode s 0
   end
 
-  include Ext.Make_ext (Key) (Value) (Input.Default.Size)
+  include Ext.Make_ext (Key) (Value) (Input.Default.Size) (* NOTE bulk of work done here *)
 
   exception NotInBtree of string
 

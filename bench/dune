@@ -22,4 +22,7 @@
 (rule
  (alias runbench)
  (action
-  (run ./bench.exe -- --minimal --clear)))
+  (run ./bench.exe -- --minimal --clear)))  ;; FIXME do we need the
+                                            ;; first "--"? seems to
+                                            ;; fail for me; omitting
+                                            ;; seems to work

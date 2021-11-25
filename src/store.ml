@@ -62,6 +62,7 @@ module Make (Params : Params.S) (Common : Field.COMMON) = struct
       s_magic t @@ Magic.to_t @@ Params.page_magic;
       s_root t @@ Address.to_t @@ root
 
+    (* FIXME what is g and s? get and set? *)
     let pp ppf t =
       Fmt.pf ppf "@[<v 2>Header:@;Magic:%a@;Root:%a@]" Magic.pp (g_magic t) Address.pp (g_root t)
 

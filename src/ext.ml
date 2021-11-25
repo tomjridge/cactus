@@ -37,7 +37,7 @@ module Make_ext (InKey : Input.Key) (InValue : Input.Value) (Size : Input.Size) 
   let empty_cache () : cache =
     let cache = Hashtbl.create 10 in
     (* Use a list of caches to allow [empty_cache ()] to return a fresh
-       cache. *)
+       cache. *) (* FIXME ? presumably so we can clear all caches at once??? *)
     caches := cache :: !caches;
     cache
 
@@ -63,6 +63,7 @@ module Make_ext (InKey : Input.Key) (InValue : Input.Value) (Size : Input.Size) 
       Store.close t.store;
       Option.iter Recorder.close t.recorder;
       List.iter (fun cache -> Hashtbl.remove cache (Store.Private.dir t.store)) !caches)
+    (* FIXME caches are for a single btree? we have to instantiate this functor each time? *)
 
   let snapshot ?(depth = 0) t =
     let rec snap_page path address =
@@ -161,7 +162,7 @@ module Make_ext (InKey : Input.Key) (InValue : Input.Value) (Size : Input.Size) 
         record t (fun () -> Find (inkey, false));
         raise Not_found
     in
-    Store.release t.store;
+    Store.release t.store; (* FIXME where is the acquire? *)
     tac stat_find;
     ret
 

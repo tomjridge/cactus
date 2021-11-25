@@ -19,13 +19,13 @@ module type K = sig
   type t
   (** The type for keys. *)
 
-  type input_key
+  type input_key (** FIXME ? *)
 
   val size : int
 
   val min : t (* minimal key *)
 
-  val of_input : input_key -> t
+  val of_input : input_key -> t  (* Some kind of abstraction? *)
 
   val to_input : t -> input_key
 
@@ -36,7 +36,7 @@ module type K = sig
 
   val compare : t -> t -> int
 
-  val set : marker:(unit -> unit) -> bytes -> off:int -> t -> unit
+  val set : marker:(unit -> unit) -> bytes -> off:int -> t -> unit  (* NOTE similar to field intf *)
 
   val get : bytes -> off:int -> t
 

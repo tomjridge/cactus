@@ -1,0 +1,8 @@
+diff against parent to see comments: 
+
+git diff e27b062.. 
+or: git diff e27b062..HEAD 
+or: git diff e27b062..2021q3_initial_readthrough
+
+Example of setting up a simple store?
+

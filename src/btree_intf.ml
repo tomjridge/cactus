@@ -40,6 +40,7 @@ module Index = struct
   module Stats = Btree_index.Stats
 end
 
+(* NOTE this is the btree lib exposed interface as seen in doc etc *)
 module type Btree = sig
   module Private = Private
 

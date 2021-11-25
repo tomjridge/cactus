@@ -31,6 +31,7 @@ module type S = sig
   val empty_cache : unit -> cache
   (** Construct a new empty cache of index instances. *)
 
+(* FIXME why v?  the log_size is the size before merging with the tree? *)
   val v :
     ?flush_callback:(unit -> unit) ->
     ?cache:cache ->
@@ -61,6 +62,7 @@ module type S = sig
   val clear : t -> unit
   (** [clear t] clears [t] so that there are no more bindings in it. *)
 
+  (* find_opt?  *)
   val find : t -> key -> value
   (** [find t k] is the binding of [k] in [t]. *)
 
@@ -82,8 +84,8 @@ module type S = sig
 
       - Order is not specified.
       - In case of recent replacements of existing values (since the last merge), this will hit both
-        the new and old bindings.
-      - May not observe recent concurrent updates to the index by other processes. *)
+        the new and old bindings.     FIXME isn't this exposing internal details?
+      - May not observe recent concurrent updates to the index by other processes.     Which ones, exactly? What is the spec for concurrent processes accessing the store? *)
 
   val flush : ?no_callback:unit -> ?with_fsync:bool -> t -> unit
   (** Flushes all internal buffers of the [IO] instances.
@@ -103,6 +105,9 @@ module type S = sig
   val sync : t -> unit
   (** [sync t] syncs a read-only index with the files on disk. Raises {!RW_not_allowed} if called by
       a read-write index. *)
+
+  (* what is merging exactly, for a B-tree? Exposes the existence of
+     the WAL. Is the existence of the WAL part of the semantics? *)
 
   val is_merging : t -> bool
   (** [is_merging t] returns true if [t] is running a merge. Raises {!RO_not_allowed} if called by a
@@ -132,20 +137,25 @@ module type Key = sig
   val hash : t -> int
   (** Note: Unevenly distributed hash functions may result in performance drops. *)
 
+  (* I would expect an order, rather than a hashing interface FIXME what is the underlying cactus impl if not ordered? *)
+
   val hash_size : int
   (** The number of bits necessary to encode the maximum output value of {!hash}. `Hashtbl.hash`
       uses 30 bits. Overestimating the [hash_size] will result in performance drops; underestimation
-      will result in undefined behavior. *)
+      will result in undefined behavior.  ... on collisions? FIXME *)
 
   val encode : t -> string
-  (** [encode] is an encoding function. The resultant encoded values must have size {!encoded_size}. *)
+  (** [encode] is an encoding function. The resultant encoded values
+     must have size {!encoded_size}. FIXME exactly??? probably OK, but
+     a bit inefficient eg if encoded_size is large, but typical values
+     are small *)
 
   val encoded_size : int
   (** [encoded_size] is the size of the result of {!encode}, expressed in number of bytes. *)
 
   val decode : string -> int -> t
   (** [decode s off] is the decoded form of the encoded value at the offset [off] of string [s].
-      Must satisfy [decode (encode t) 0 = t]. *)
+      Must satisfy [decode (encode t) 0 = t]. FIXME must satisfy other requirements? *)
 end
 
 module type Value = sig
@@ -153,7 +163,7 @@ module type Value = sig
 
   val encode : t -> string
 
-  val encoded_size : int
+  val encoded_size : int  (* FIXME same requirements as Key? *)
 
   val decode : string -> int -> t
 end

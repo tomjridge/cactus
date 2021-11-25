@@ -15,6 +15,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
+(* FIXME what is a field? a value that can be stored in a B-tree? *)
+
 module type FIELD = sig
   (** Modules of this type are an abstraction barrier between the in-memory and on-disk
       representation of the metadata. *)

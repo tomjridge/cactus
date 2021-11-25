@@ -12,7 +12,7 @@ module type VALUE = sig
 end
 
 module type HYPER = sig
-  (** Hyperparameters *)
+  (** Hyperparameters *)  (* FIXME what is a hyperparameter??? Something like the very basic parameters? *)
 
   val ram : int
   (** the maximum number of bindings that can be loaded in memory at any point *)
@@ -20,6 +20,7 @@ module type HYPER = sig
   val kway : int
   (** the maximum value of [k] such that we allow a [k]-way merge to be performed. This in turn
       controls the maximum number of open file descriptors open at any point. *)
+    (* FIXME what is the kway merge? *)
 end
 
 module type S = sig

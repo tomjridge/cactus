@@ -67,6 +67,10 @@ module type S = sig
     order : [ `Lower | `Higher ];
   }
 
+
+  (* FIXME the neighbour stuff seems strange - for remove/delete, we
+     need to examine both neighbours... do we? *)
+
   val find_with_neighbour : t -> key -> with_neighbour
   (** [find_with_neighbour t k] as [find t k] but also returns a neighbour of [k] in [t] (the
       right-most one when [k] has neighbours in both directions). *)
